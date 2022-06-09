@@ -12,34 +12,6 @@
 
 #define TEST(x) { assert(x()); std::cerr << std::left << std::setw(30) << #x << " pass" << std::endl; } 
 
-
-
-std::ostream& operator<<(std::ostream& os, const IntArray& array)
-{
-	for (size_t i = 0; i < array._size; ++i) {
-		os << array._data[i] << " ";
-	}
-
-	return os;
-}
-
-bool operator!=(const IntArray& lhs, const IntArray& rhs)
-{
-	if (lhs._size != rhs._size) {
-		return true;
-	}
-
-	for (size_t i = 0; i < lhs._size; ++i) {
-		if (lhs._data[i] != rhs._data[i]) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-
 static IntArray test_pass_parameters(IntArray a) 
 {
 	return a;
@@ -537,6 +509,7 @@ bool TestSort()
 		}
 	}
 
+	/*
 	{
 		IntArray a(256);
 		srand(time(NULL));
@@ -551,8 +524,7 @@ bool TestSort()
 		std::cout << a << std::endl;
 
 	}
-
-
+	*/
 
 	return true;
 }
