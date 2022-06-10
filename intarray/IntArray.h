@@ -17,6 +17,7 @@ public:
 	const int& operator[] (size_t index) const;
 public:
 	friend std::ostream& operator<<(std::ostream& os, const IntArray& array);
+	friend bool operator==(const IntArray& lhs, const IntArray& rhs);
 	friend bool operator!=(const IntArray& lhs, const IntArray& rhs);
 public:
 	size_t GetSize() const noexcept;

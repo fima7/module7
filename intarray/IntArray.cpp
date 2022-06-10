@@ -111,7 +111,11 @@ void IntArray::PopFront()
 
 void IntArray::PushBack(int value)
 {
-	Insert(value, _size - 1);
+	if (_size == 0) {
+		PushFront(value);
+	} else {
+		Insert(value, _size - 1);
+	}
 }
 
 void IntArray::PopBack()
@@ -207,19 +211,26 @@ std::ostream& operator<<(std::ostream& os, const IntArray& array)
 	return os;
 }
 
-bool operator!=(const IntArray& lhs, const IntArray& rhs)
+bool operator==(const IntArray& lhs, const IntArray& rhs)
 {
 	if (lhs._size != rhs._size) {
-		return true;
+		return false;
 	}
 
 	for (size_t i = 0; i < lhs._size; ++i) {
 		if (lhs._data[i] != rhs._data[i]) {
-			return true;
+			return false;
 		}
 	}
 
-	return false;
+	return true;
 }
+
+
+bool operator!=(const IntArray& lhs, const IntArray& rhs)
+{
+	return !(lhs == rhs);
+}
+
 
 

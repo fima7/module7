@@ -10,36 +10,30 @@
 #include <ctime>
 #include <random>
 
-#define TEST(x) { assert(x()); std::cerr << std::left << std::setw(30) << #x << " pass" << std::endl; } 
+#define TEST(x) { x(); std::cerr << std::left << std::setw(30) << #x << " pass" << std::endl; } 
 
 static IntArray test_pass_parameters(IntArray a) 
 {
 	return a;
 }
 
-bool TestConstructors()
+static void TestConstructors()
 {
 
 	{ // Инициялизация пустого массива
 		IntArray a;
-		if (a.GetSize() != 0) {
-			return false;
-		}
+		assert(a.GetSize() == 0);
 	}
 
 	{ // Инициялизация пустого массива
 		IntArray a{};
-		if (a.GetSize() != 0) {
-			return false;
-		}
+		assert(a.GetSize() == 0);
 	}
 
 	{ // Инициализация с параметром
 		IntArray a(10);
 
-		if (a.GetSize() != 10) {
-			return false;
-		}
+		assert(a.GetSize() == 10);
 
 		for (int i = 0; i < 10; ++i) {
 			a[i] = i;
@@ -47,90 +41,67 @@ bool TestConstructors()
 
 
 		for (int i = 0; i < a.GetSize(); ++i) {
-			if (a[i] != i) {
-				return false;
-			}
+			assert(a[i] == i);
 		}
-
 	}
 		
 	{ // Унифицированная инициализация
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 
 		for (int i = 0; i < a.GetSize(); ++i) {
-			if (a[i] != i) {
-				return false;
-			}
+			assert(a[i] == i);
 		}
 	}
 
 	{ // Инициализация копированием
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray b = a;
-		if (a.GetSize() != b.GetSize()) {
-			return false;
-		}
+		assert(a.GetSize() == b.GetSize());
 
 		for (int i = 0; i < b.GetSize(); ++i) {
-			if (a[i] != b[i]) {
-				return false;
-			}
+			assert(a[i] == b[i]);
 		}
 	}
 
 	{ // Инициализация копированием
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray b(a);
-		if (a.GetSize() != b.GetSize()) {
-			return false;
-		}
+		assert(a.GetSize() == b.GetSize());
 
 		for (int i = 0; i <b.GetSize(); ++i) {
-			if (a[i] != b[i]) {
-				return false;
-			}
+			assert(a[i] == b[i]);
 		}
 	}
 
 	{ // Инициализация копированием
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray b{ a };
-		if (a.GetSize() != b.GetSize()) {
-			return false;
-		}
+		assert(a.GetSize() == b.GetSize());
 
 		for (int i = 0; i <b.GetSize(); ++i) {
-			if (a[i] != b[i]) {
-				return false;
-			}
+			assert(a[i] == b[i]);
 		}
 	}
 
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray b = test_pass_parameters(a);
-		if (a.GetSize() != b.GetSize()) {
-			return false;
-		}
+		assert(a.GetSize() == b.GetSize());
+
 		for (int i = 0; i < b.GetSize(); ++i) {
-			if (a[i] != b[i]) {
-				return false;
-			}
+			assert(a[i] == b[i]);
 		}
 	}
 
 	{
 		const IntArray a{ 0, 1, 2, 3, 4, 5 };
 		const int b = a[5];
-		if (b != 5) {
-			return false;
-		}
+		assert(b == 5);
 	}
 
-	return true;
 }
 
-bool TestAssignment()
+static void TestAssignment()
 {
 	{
 		IntArray a{ 1, 2, 3, 4, 5 };
@@ -138,116 +109,76 @@ bool TestAssignment()
 
 		b = a;
 
-		if (b.GetSize() != a.GetSize()) {
-			return false;
-		}
+		assert(b.GetSize() == a.GetSize());
 
 		for (size_t i = 0; i < b.GetSize(); ++i) {
-			if (b[i] != a[i]) {
-				return false;
-			}
+			assert(b[i] == a[i]);
 		}
 	}
 
-	return true;
-
 }
 
-bool TestAccess()
+static void TestAccess()
 {
 	{
 		IntArray a{0, 1, 2, 3, 4, 5 };
 		int v = a[5];
-		if (v != 5) {
-			return false;
-		}
+		assert(v == 5);
 	}
 	{
 		try {
 			IntArray a{ 1, 2, 3, 4, 5 };
 			std::cout << a[16] << std::endl;
-			return false;
-		} catch (OutOfRange& e) {
-			std::cerr << "Exception: " << e.what() << std::endl;
+			assert(false);
+		} catch (OutOfRange&) {
+			// std::cerr << "Exception: " << e.what() << std::endl;
 		}
 	}
 	{
 		try {
 			IntArray a(10000000000);
-			return false;
-		} catch (std::bad_alloc& e) {
-			std::cerr << "Exception: " << e.what() << std::endl;
+			assert(false);
+		} catch (std::bad_alloc&) {
+			// std::cerr << "Exception: " << e.what() << std::endl;
 		}
 	}
 	{
 		IntArray a{ 1, 2, 3, 4, 5 };
-		if (a.GetFront() != 1) {
-			return false;
-		}
+		assert(a.GetFront() == 1);
 	}
 	{
 		IntArray a{ 1, 2, 3, 4, 5 };
-		if (a.GetBack() != 5) {
-			return false;
-		}
+		assert(a.GetBack() == 5);
 	}
 
-	return true;
 }
 
-bool TestResize()
+static void TestResize()
 {
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
+		IntArray e{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 		a.Resize(10);
-
-		if (a.GetSize() != 10) {
-			return false;
-		}
-
-		for (int i = 0; i <= 5; ++i) {
-			if (a[i] != i) {
-				return false;
-			}
-		}
-
 		for (int i = 6; i < a.GetSize(); ++i) {
 			a[i] = i;
 		}
 
-		for (size_t i = 6; i < a.GetSize(); ++i) {
-			if (a[i] != i) {
-				return false;
-			}
-		}
+		assert(a == e);
 	}
 
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		IntArray e{ 0, 1, 2, 3, 4, 5 };
 		
 		a.Resize(6);
 
-		if (a.GetSize() != 6) {
-			return false;
-		}
-
-		for (size_t i = 0; i < a.GetSize(); ++i) {
-			if (a[i] != i) {
-				return false;
-			}
-		}
+		assert(a == e);
 	}
 
-	return true;
 }
 
-static bool set_out_of_size()
-{
-	return true;
-}
-
-bool TestInsert()
+static void TestInsert()
 {
 
 	{
@@ -256,10 +187,7 @@ bool TestInsert()
 
 		a.Insert(8, 0);
 
-		assert(a.GetSize() == e.GetSize());
-		for (size_t i = 0; i < e.GetSize(); ++i) {
-			assert(a[i] == e[i]);
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
@@ -267,10 +195,7 @@ bool TestInsert()
 
 		a.Insert(8, 1);
 
-		assert(a.GetSize() == e.GetSize());
-		for (size_t i = 0; i < e.GetSize(); ++i) {
-			assert(a[i] == e[i]);
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
@@ -278,10 +203,7 @@ bool TestInsert()
 
 		a.Insert(8, 2);
 
-		assert(a.GetSize() == e.GetSize());
-		for (size_t i = 0; i < e.GetSize(); ++i) {
-			assert(a[i] == e[i]);
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
@@ -289,10 +211,7 @@ bool TestInsert()
 
 		a.Insert(8, 3);
 
-		assert(a.GetSize() == e.GetSize());
-		for (size_t i = 0; i < e.GetSize(); ++i) {
-			assert(a[i] == e[i]);
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
@@ -300,10 +219,7 @@ bool TestInsert()
 
 		a.Insert(8, 4);
 
-		assert(a.GetSize() == e.GetSize());
-		for (size_t i = 0; i < e.GetSize(); ++i) {
-			assert(a[i] == e[i]);
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
@@ -311,10 +227,7 @@ bool TestInsert()
 
 		a.Insert(8, 5);
 
-		assert(a.GetSize() == e.GetSize());
-		for (size_t i = 0; i < e.GetSize(); ++i) {
-			assert(a[i] == e[i]);
-		}
+		assert(a == e);
 	}
 	{
 		// Два блока try не нужны, использую только чтобы попрактиковаться
@@ -324,224 +237,207 @@ bool TestInsert()
 			try {
 				IntArray a{ 0, 1, 2, 3, 4, 5 };
 				a.Insert(8, 6);
-				return false;
+				assert(false);
 			} catch (std::out_of_range& e) {
 				std::string msg(e.what());
-				if (msg != emsg) {
-					std::cerr << "\"" << msg << "\""
-						<< " differs "
-						<< "\"" << emsg << "\""
-						<< std::endl;
-				}
-
-				throw; // можно так не делать, просто решил потренироваться 
-				// throw e; // так будет скоприровано out_of_ragne, и перехваченное e.what() даст "out of range"
+				assert(msg == emsg);
+				throw;
 			}
-			return false;
+			assert(false);
 		} catch (std::exception& e) {
 			std::string msg(e.what());
-			if (msg != emsg) {
-				std::cerr << "\"" << msg << "\""
-					<< " differs "
-					<< "\"" << emsg << "\""
-					<< std::endl;
-			}
+			assert(msg == emsg);
 		}
 	}
 
-	return true;
 }
 
-bool TestPushFront()
+static void TestPushFront()
 {
-	
+	{
+		IntArray a;
+		IntArray e{ 5 };
+		a.PushFront(5);
+		assert(a.GetFront() == 5);
+		assert(a == e);
+	}
 	{
 
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
-
-		size_t prev_size = a.GetSize();
+		IntArray e{ -2, -1, 0, 1, 2, 3, 4, 5 };
 
 		a.PushFront(-1);
-		
-		if (a.GetSize() != (prev_size + 1)) {
-			return false;
-		}
-
-		if (a.GetFront() != -1) {
-			return false;
-		}
-
-		prev_size = a.GetSize();
+		assert(a.GetFront() == -1);
 
 		a.PushFront(-2);
+		assert(a.GetFront() == -2);
 		
-		if (a.GetSize() != (prev_size + 1)) {
-			return false;
-		}
-
-		if (a.GetFront() != -2) {
-			return false;
-		}
-
-		if (a.GetSize() != 8) {
-			return false;
-		}
-
-		for (size_t i = 0; i < a.GetSize(); ++i) {
-			if (a[i] != i - 2) {
-				return false;
-			}
-		}
-
+		assert(a == e);
 	}
 
-	return true;
 }
 
-bool TestErase()
+static void TestPushBack()
+{
+
+	{
+		IntArray a;
+		IntArray e{ 5 };
+
+		a.PushBack(5);
+		assert(a.GetBack() == 5);
+		assert(a == e);
+	}
+	{
+
+		IntArray a{ 0, 1, 2, 3, 4, 5 };
+		IntArray e{ 0, 1, 2, 3, 4, 5, 6, 7 };
+
+		a.PushBack(6);
+		assert(a.GetBack() == 6);
+
+		a.PushBack(7);
+		assert(a.GetBack() == 7);
+		
+		assert(a == e);
+	}
+
+}
+
+static void TestErase()
 {
 
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 1, 2, 3, 4, 5 };
 		a.Erase(0);
-		if (a != e) {
-			return false;
-		}
-		// std::cout << a << std::endl;
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 0, 2, 3, 4, 5 };
 		a.Erase(1);
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 0, 1, 3, 4, 5 };
 		a.Erase(2);
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 0, 1, 2, 4, 5 };
 		a.Erase(3);
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 0, 1, 2, 3, 5 };
 		a.Erase(4);
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 0, 1, 2, 3, 4 };
 		a.Erase(5);
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 
-	return true;
 }
 
-bool TestSort()
+static void TestSort()
 {
 	{
 		IntArray a{ 5, 4, 3, 2, 1, 0 };
 		IntArray e{ 0, 1, 2, 3, 4, 5 };
 		a.Sort();
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 0, 1, 2, 3, 4, 5 };
 		a.Sort();
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 
 	{
 		IntArray a{ 5 };
 		IntArray e{ 5 };
 		a.Sort();
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 	{
 		IntArray a{ 0, 1, 2, 3, 4, 5 };
 		IntArray e{ 5, 4, 3, 2, 1, 0 };
 		a.RSort();
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 
 	{
 		IntArray a{ 5, 4, 3, 2, 1, 0 };
 		IntArray e{ 5, 4, 3, 2, 1, 0 };
 		a.RSort();
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 
 	{
 		IntArray a{ 5 };
 		IntArray e{ 5 };
 		a.RSort();
-		if (a != e) {
-			return false;
-		}
+		assert(a == e);
 	}
 
-	/*
+}
+
+static void TestAllocation() 
+{
+
+#if 0 // зависит от машины	
 	{
-		IntArray a(256);
-		srand(time(NULL));
-		for (size_t i = 0; i < 256; ++i) {
-			a[i] = std::rand() % 255;
+		try {
+			IntArray a(100'000'000'000);
+			assert(false);
+		} catch (std::bad_alloc&) {
 		}
-
-		std::cout << a << std::endl;
-
-		a.RSort();
-
-		std::cout << a << std::endl;
-
 	}
-	*/
+	{
+		IntArray a;
+		try {
+			a.Resize(100'000'000'000);
+			assert(false);
+		} catch (std::bad_alloc&) {
+		}
+	}
+	{
+		IntArray a;
+		try {
+			IntArray a(4'000'000'000);
+			for (size_t i = 0; i < 1'000'000; ++i) {
+				a.PushFront(i);
+			}
+			assert(false);
+		} catch (std::bad_alloc&) {
+		}
+	}
+	{
+		IntArray a;
+		try {
+			IntArray a(4'000'000'000);
+			for (size_t i = 0; i < 1'000'000; ++i) {
+				a.PushBack(i);
+			}
+			assert(false);
+		} catch (std::bad_alloc&) {
+		}
+	}
+#endif
 
-	return true;
 }
 
 int main()
 {
-	/*
-	try {
-		throw new int;
-	}
-	catch (const int* i) {
-		std::cerr << "Caught" << std::endl;
-	}
-
-	return 0;
-	*/
-
 
 	TEST(TestConstructors);
 	TEST(TestAssignment);
@@ -549,8 +445,10 @@ int main()
 	TEST(TestResize);
 	TEST(TestInsert);
 	TEST(TestPushFront);
+	TEST(TestPushBack);
 	TEST(TestErase);
 	TEST(TestSort);
+	TEST(TestAllocation);
 
 
 } 
