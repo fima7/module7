@@ -2,44 +2,48 @@
 
 #include <string>
 #include <stdexcept>
+#include <initializer_list>
+#include <string>
+#include <ostream>
 
 class IntArray
 {
-public:
+public: // создание, удаление
 	IntArray();
 	explicit IntArray(size_t size);
 	IntArray(std::initializer_list<int> l);
 	IntArray(const IntArray& other);
-	virtual ~IntArray();
-public:
 	IntArray& operator=(const IntArray& other);
+	virtual ~IntArray();
+public: // доступ к элементам
 	int& operator[] (size_t index);
 	const int& operator[] (size_t index) const;
-public:
-	friend std::ostream& operator<<(std::ostream& os, const IntArray& array);
-	friend bool operator==(const IntArray& lhs, const IntArray& rhs);
-	friend bool operator!=(const IntArray& lhs, const IntArray& rhs);
-public:
 	size_t GetSize() const noexcept;
-	void Resize(size_t size);
 	int GetFront() const;
 	int GetBack() const;
+	bool Find(int value, size_t& index) const noexcept;
+public: // изменение 
+	void Resize(size_t size);
 	void PushFront(int value);
 	void PopFront();
 	void PushBack(int value);
 	void PopBack();
 	void Insert(int value, size_t index);
 	void Erase(size_t index);
-	bool Find(int value, size_t& index) const noexcept;
 	void Sort() noexcept;
 	void RSort() noexcept;
-private:
+public: // вспопогательное
+	friend std::ostream& operator<<(std::ostream& os, const IntArray& array);
+	friend bool operator==(const IntArray& lhs, const IntArray& rhs);
+	friend bool operator!=(const IntArray& lhs, const IntArray& rhs);
+private: // обмен содержимым
 	void Swap(IntArray& tmp);
 private:
-	size_t _size;
-	int* _data;
+	size_t _size;	// количество элементов
+	int* _data;		// элементы
 };
 
+// исключение, индекс больше чем количество элементов
 class OutOfRange : public std::out_of_range
 {
 public:
@@ -56,3 +60,4 @@ private:
 	std::string _msg;
 
 };
+

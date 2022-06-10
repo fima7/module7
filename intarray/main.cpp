@@ -1,16 +1,15 @@
 ﻿#include "IntArray.h"
 
-#include <iostream>
 #include <cassert>
+#include <iostream>
 #include <iomanip>
-#include <initializer_list>
-#include <stdexcept>
-#include <string>
-#include <cstring>
-#include <ctime>
-#include <random>
 
 #define TEST(x) { x(); std::cerr << std::left << std::setw(30) << #x << " pass" << std::endl; } 
+
+
+//
+// Тесты для IntArray
+//
 
 static IntArray test_pass_parameters(IntArray a) 
 {
@@ -450,5 +449,6 @@ int main()
 	TEST(TestSort);
 	TEST(TestAllocation);
 
+	return 0;
 
 } 

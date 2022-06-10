@@ -1,6 +1,10 @@
 #include "IntArray.h"	
 
-#include <ostream>
+#include <cstring>
+
+//
+// Создание и удаление
+//
 
 IntArray::IntArray()
 		: _size{}
@@ -46,11 +50,17 @@ IntArray& IntArray::operator=(const IntArray& other)
 	return *this;
 }
 
+//
+// Доступ к элементам  
+// 
+
+// получение размера массива
 size_t IntArray::GetSize() const noexcept
 {
 	return _size;
 }
 
+// доступ к элементу по индексу
 int& IntArray::operator[] (size_t index)
 {
 	if (index >= _size) {
@@ -60,11 +70,49 @@ int& IntArray::operator[] (size_t index)
 
 }
 
+// доступ к элементу по индексу
 const int& IntArray::operator[] (size_t index) const
 {
 	return const_cast<IntArray*>(this)->operator[](index);
 }
 
+// Получить первый элемент массива с индексом 0
+int IntArray::GetFront() const
+{
+	if (_size == 0) {
+		throw OutOfRange(0, _size);
+	}
+	return _data[0];
+}
+
+// Получить элемент с индексом size - 1
+int IntArray::GetBack() const
+{
+	if (_size == 0) {
+		throw OutOfRange(0, _size);
+	}
+	return _data[_size - 1];
+}
+
+// поиска в контейнере элемента по индексу
+bool IntArray::Find(int value, size_t& index) const noexcept
+{
+	for (size_t i = 0; i < _size; ++i) {
+		if (_data[i] == value) {
+			index = i;
+			return true;
+		}
+	}
+	return false;
+}
+
+//
+// Изменение массива
+//
+
+// Меняет размер массива
+// в большую сторону с сохранением всех данных
+// в меньшую сторону с сохранением остающихся данных
 void IntArray::Resize(size_t size)
 {
 	IntArray tmp(size);
@@ -75,22 +123,8 @@ void IntArray::Resize(size_t size)
 	Swap(tmp);
 }
 
-int IntArray::GetFront() const
-{
-	if (_size == 0) {
-		throw OutOfRange(0, _size);
-	}
-	return _data[0];
-}
-
-int IntArray::GetBack() const
-{
-	if (_size == 0) {
-		throw OutOfRange(0, _size);
-	}
-	return _data[_size - 1];
-}
-
+// добавить элемент в начало массива
+// происходит копирование всех элементов
 void IntArray::PushFront(int value)
 {
 	IntArray tmp(_size + 1);
@@ -104,11 +138,15 @@ void IntArray::PushFront(int value)
 	Swap(tmp);
 }
 
+// удалить элемент из начала массива
+// происходит копирование всех элементов
 void IntArray::PopFront()
 {
 	Erase(0);
 }
 
+// добавить элемент в конец массива 
+// происходит копирование всех элементов
 void IntArray::PushBack(int value)
 {
 	if (_size == 0) {
@@ -118,11 +156,15 @@ void IntArray::PushBack(int value)
 	}
 }
 
+// Удалить элемент с конца массива  
+// происходит копирование всех элементов
 void IntArray::PopBack()
 {
 	Erase(_size - 1);
 }
 
+// вставить элемент в массив после элемента по заданному индексу
+// происходит копирование всех элементов
 void IntArray::Insert(int value, size_t index)
 {
 	if (index >= _size) {
@@ -142,6 +184,8 @@ void IntArray::Insert(int value, size_t index)
 	Swap(tmp);
 }
 
+// удалить элемент по заданному индексу
+// происходит копирование всех элементов
 void IntArray::Erase(size_t index)
 {
 	if (index >= _size) {
@@ -160,18 +204,7 @@ void IntArray::Erase(size_t index)
 	Swap(tmp);
 }
 
-// поиска в контейнере элемента по индексу
-bool IntArray::Find(int value, size_t& index) const noexcept
-{
-	for (size_t i = 0; i < _size; ++i) {
-		if (_data[i] == value) {
-			index = i;
-			return true;
-		}
-	}
-	return false;
-}
-
+// сортировка в порядке возрастания
 void IntArray::Sort() noexcept
 {
 	for (size_t i = 0; i < _size - 1; ++i) {
@@ -184,6 +217,7 @@ void IntArray::Sort() noexcept
 
 }
 
+// сортировка в порядке убывания
 void IntArray::RSort() noexcept
 {
 	for (size_t i = 0; i < _size - 1; ++i) {
@@ -196,12 +230,11 @@ void IntArray::RSort() noexcept
 
 }
 
-void IntArray::Swap(IntArray& tmp)
-{
-	std::swap(_size, tmp._size);
-	std::swap(_data, tmp._data);
-}
+// 
+// Вспомогательные методы 
+//
 
+// вывод содержимого массива
 std::ostream& operator<<(std::ostream& os, const IntArray& array)
 {
 	for (size_t i = 0; i < array._size; ++i) {
@@ -211,6 +244,7 @@ std::ostream& operator<<(std::ostream& os, const IntArray& array)
 	return os;
 }
 
+// проверка на равенство массивов
 bool operator==(const IntArray& lhs, const IntArray& rhs)
 {
 	if (lhs._size != rhs._size) {
@@ -226,11 +260,20 @@ bool operator==(const IntArray& lhs, const IntArray& rhs)
 	return true;
 }
 
-
+// проверка на неравенство массивов
 bool operator!=(const IntArray& lhs, const IntArray& rhs)
 {
 	return !(lhs == rhs);
 }
 
+//
+// Закрытые методы 
+//
 
+// обмен содержанием между массивами
+void IntArray::Swap(IntArray& tmp)
+{
+	std::swap(_size, tmp._size);
+	std::swap(_data, tmp._data);
+}
 
