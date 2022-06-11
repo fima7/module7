@@ -6,6 +6,8 @@
 #include <string>
 #include <ostream>
 
+// Объявление IntArray
+
 class IntArray
 {
 
