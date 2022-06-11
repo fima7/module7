@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include <string>
 #include <stdexcept>
@@ -8,21 +8,22 @@
 
 class IntArray
 {
-public: // создание, удаление
+
+public: // СЃРѕР·РґР°РЅРёРµ, СѓРґР°Р»РµРЅРёРµ
 	IntArray();
 	explicit IntArray(size_t size);
 	IntArray(std::initializer_list<int> l);
 	IntArray(const IntArray& other);
 	IntArray& operator=(const IntArray& other);
 	virtual ~IntArray();
-public: // доступ к элементам
+public: // РґРѕСЃС‚СѓРї Рє СЌР»РµРјРµРЅС‚Р°Рј
 	int& operator[] (size_t index);
 	const int& operator[] (size_t index) const;
 	size_t GetSize() const noexcept;
 	int GetFront() const;
 	int GetBack() const;
 	bool Find(int value, size_t& index) const noexcept;
-public: // изменение 
+public: // РёР·РјРµРЅРµРЅРёРµ 
 	void Resize(size_t size);
 	void PushFront(int value);
 	void PopFront();
@@ -32,18 +33,18 @@ public: // изменение
 	void Erase(size_t index);
 	void Sort() noexcept;
 	void RSort() noexcept;
-public: // вспопогательное
+public: // РІСЃРїРѕРїРѕРіР°С‚РµР»СЊРЅРѕРµ
 	friend std::ostream& operator<<(std::ostream& os, const IntArray& array);
 	friend bool operator==(const IntArray& lhs, const IntArray& rhs);
 	friend bool operator!=(const IntArray& lhs, const IntArray& rhs);
-private: // обмен содержимым
+private: // РѕР±РјРµРЅ СЃРѕРґРµСЂР¶РёРјС‹Рј
 	void Swap(IntArray& tmp);
 private:
-	size_t _size;	// количество элементов
-	int* _data;		// элементы
+	size_t _size;	// РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
+	int* _data;		// СЌР»РµРјРµРЅС‚С‹
 };
 
-// исключение, индекс больше чем количество элементов
+// РёСЃРєР»СЋС‡РµРЅРёРµ, РёРЅРґРµРєСЃ Р±РѕР»СЊС€Рµ С‡РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
 class OutOfRange : public std::out_of_range
 {
 public:
